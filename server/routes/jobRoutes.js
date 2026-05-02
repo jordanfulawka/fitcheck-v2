@@ -3,9 +3,12 @@ const jobController = require('../controllers/jobController');
 
 const router = express.Router();
 
-router.route('/').get(jobController.getAllJobs).post(jobController.createJob);
 router
-  .route('/:id')
+  .route('/jobs')
+  .get(jobController.getAllJobs)
+  .post(jobController.createJob);
+router
+  .route('/jobs/:id')
   .get(jobController.getJob)
   .patch(jobController.updateJob)
   .delete(jobController.deleteJob);
