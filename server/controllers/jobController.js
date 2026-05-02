@@ -45,3 +45,36 @@ exports.createJob = async (req, res) => {
     });
   }
 };
+
+exports.updateJob = async (req, res) => {
+  try {
+    const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(201).json({
+      status: 'success',
+      data: {
+        job: updatedJob,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'failed to update job',
+    });
+  }
+};
+
+exports.deleteJob = async (req, res) => {
+  try {
+    await Job.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'success',
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'failed to delete job',
+    });
+  }
+};
