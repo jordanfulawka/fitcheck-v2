@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
 require('dotenv').config();
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 main()
   .then(() => console.log('connection successful'))
