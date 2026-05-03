@@ -78,3 +78,40 @@ exports.deleteJob = async (req, res) => {
     });
   }
 };
+
+exports.getJobsByStatus = async (req, res) => {
+  try {
+    const stats = await Job.aggregate().group({
+      _id: '$status',
+      count: { $sum: 1 },
+    });
+
+    const result = {
+      total: 0,
+      applied: 0,
+      interviewing: 0,
+      offer: 0,
+      rejected: 0,
+    };
+
+    stats.forEach(({ _id, count }) => {
+      result.total += count;
+      if (_id === 'Applied') result.applied = count;
+      if (_id === 'Interviewing') result.interviewing = count;
+      if (_id === 'Offer') result.offer = count;
+      if (_id === 'Rejected') result.rejected = count;
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        result,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
