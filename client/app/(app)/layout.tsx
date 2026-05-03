@@ -1,10 +1,14 @@
 import Sidebar from '@/components/Sidebar';
+import TopBar from '@/components/TopBar';
 
 export default function AppLayout({ children }) {
   return (
     <div className='flex h-screen'>
       <Sidebar />
-      <main className='flex-1'>{children}</main>
+      <div className='flex-1 flex flex-col'>
+        <TopBar />
+        <main className='h-full'>{children}</main>
+      </div>
     </div>
   );
 }
