@@ -12,7 +12,7 @@ import { usePathname } from 'next/navigation';
 export default function Sidebar() {
   const pathname = usePathname();
   return (
-    <nav className='w-64 h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col items-center'>
+    <nav className='w-64 h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col items-center shrink-0'>
       <div className='p-8'>
         <h1 className='text-2xl font-bold'>FitCheck</h1>
         <p>Job Application Tracker</p>
