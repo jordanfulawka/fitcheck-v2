@@ -115,3 +115,94 @@ exports.getJobsByStatus = async (req, res) => {
     });
   }
 };
+
+exports.deleteAllJobs = async (req, res) => {
+  try {
+    await Job.deleteMany({});
+    res.status(204).json({
+      status: 'success',
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
+
+exports.getRecentJobs = async (req, res) => {
+  try {
+    const period = req.query.period;
+    const isMonthly = period === 'monthly';
+
+    const now = new Date();
+    const startDate = new Date();
+
+    if (isMonthly) {
+      startDate.setMonth(now.getMonth() - 11);
+      startDate.setDate(1);
+    } else {
+      startDate.setDate(now.getDate() - 6);
+    }
+
+    const data = await Job.aggregate([
+      {
+        $match: {
+          dateApplied: { $gte: startDate },
+        },
+      },
+      {
+        $group: {
+          _id: isMonthly
+            ? { $dateToString: { format: '%Y-%m', date: '$dateApplied' } }
+            : { $dateToString: { format: '%Y-%m-%d', date: '$dateApplied' } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    const labels = [];
+    if (isMonthly) {
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(now);
+        d.setMonth(now.getMonth() - i);
+        labels.push(d.toISOString().slice(0, 7));
+      }
+    } else {
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        labels.push(d.toISOString().slice(0, 10));
+      }
+    }
+
+    const countMap = {};
+    data.forEach(({ _id, count }) => {
+      countMap[_id] = count;
+    });
+
+    const filled = labels.map((label) => {
+      return {
+        _id: label,
+        count: countMap[label] || 0,
+      };
+    });
+
+    console.log(filled);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        filled,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};

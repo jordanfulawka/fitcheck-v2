@@ -6,9 +6,12 @@ const router = express.Router();
 router
   .route('/jobs')
   .get(jobController.getAllJobs)
-  .post(jobController.createJob);
+  .post(jobController.createJob)
+  .delete(jobController.deleteAllJobs);
 
 router.route('/jobs/stats').get(jobController.getJobsByStatus);
+
+router.route('/jobs/chart').get(jobController.getRecentJobs);
 
 router
   .route('/jobs/:id')

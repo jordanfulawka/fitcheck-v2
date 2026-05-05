@@ -1,3 +1,4 @@
+import ApplicationActivityChart from '@/components/ApplicationActivityChart';
 import {
   Ban,
   CalendarCheck2,
@@ -6,16 +7,16 @@ import {
 } from 'lucide-react';
 
 export default async function Dashboard() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/stats`);
+  const res = await fetch(`${process.env.API_URL}/api/jobs/stats`);
   const { data } = await res.json();
 
   return (
     <div className='bg-background h-full p-6'>
       <div className='p-5'>
         <h1 className='text-2xl font-bold'>Overview</h1>
-        <p>Good morning! Ready to apply for some more jobs?</p>
+        <p>Hello! Ready to apply for some more jobs?</p>
       </div>
-      <div className='flex gap-20 px-20 justify-between'>
+      <div className='flex gap-20 px-5 justify-between'>
         <div className='border border-[#dee2e6] flex-1 bg-white h-32 rounded-lg'>
           <div className='flex justify-between pt-4 px-4'>
             <h1 className='text-lg font-bold text-gray-500'>
@@ -57,6 +58,7 @@ export default async function Dashboard() {
           </p>
         </div>
       </div>
+      <ApplicationActivityChart />
     </div>
   );
 }

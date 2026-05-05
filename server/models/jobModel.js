@@ -5,7 +5,7 @@ const jobSchema = new Schema({
   company: String,
   role: String,
   location: String,
-  dateApplied: String,
+  dateApplied: Date,
   applicationURL: String,
   status: String,
   priority: String,
