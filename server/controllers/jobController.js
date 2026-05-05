@@ -2,6 +2,22 @@ const Job = require('../models/jobModel');
 
 exports.getAllJobs = async (req, res) => {
   try {
+    if (req.query.page) {
+      const page = Number(req.query.page);
+      const limit = 5;
+      const skip = (page - 1) * limit;
+
+      const [jobs, total] = await Promise.all([
+        Job.find().skip(skip).limit(limit),
+        Job.countDocuments(),
+      ]);
+
+      return res.status(200).json({
+        status: 'success',
+        data: { jobs, page, totalPages: Math.ceil(total / limit) },
+      });
+    }
+
     const jobs = await Job.find();
     res.status(200).json({
       status: 'success',
@@ -81,25 +97,22 @@ exports.deleteJob = async (req, res) => {
 
 exports.getJobsByStatus = async (req, res) => {
   try {
-    const stats = await Job.aggregate().group({
-      _id: '$status',
-      count: { $sum: 1 },
-    });
+    const jobs = await Job.find();
 
     const result = {
       total: 0,
-      applied: 0,
-      interviewing: 0,
-      offer: 0,
-      rejected: 0,
+      applied: [],
+      interviewing: [],
+      offer: [],
+      rejected: [],
     };
 
-    stats.forEach(({ _id, count }) => {
-      result.total += count;
-      if (_id === 'Applied') result.applied = count;
-      if (_id === 'Interviewing') result.interviewing = count;
-      if (_id === 'Offer') result.offer = count;
-      if (_id === 'Rejected') result.rejected = count;
+    jobs.forEach((job) => {
+      result.total += 1;
+      if (job.status === 'Applied') result.applied.push(job);
+      if (job.status === 'Interviewing') result.interviewing.push(job);
+      if (job.status === 'Offer') result.offer.push(job);
+      if (job.status === 'Rejected') result.rejected.push(job);
     });
 
     res.status(200).json({
@@ -190,8 +203,6 @@ exports.getRecentJobs = async (req, res) => {
         count: countMap[label] || 0,
       };
     });
-
-    console.log(filled);
 
     res.status(200).json({
       status: 'success',
