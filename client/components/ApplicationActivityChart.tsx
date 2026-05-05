@@ -21,7 +21,7 @@ export default function ApplicationActivityChart() {
   }, [period]);
 
   return (
-    <div>
+    <div className='w-[70%] mt-'>
       <div className='flex gap-2'>
         <button onClick={() => setPeriod('weekly')}>Weekly</button>
         <button onClick={() => setPeriod('monthly')}>Monthly</button>
@@ -29,7 +29,7 @@ export default function ApplicationActivityChart() {
       <ResponsiveContainer width='100%' height={300}>
         <BarChart data={data}>
           <XAxis dataKey='_id' />
-          <YAxis />
+          <YAxis dataKey='count' allowDecimals={false} />
           <Tooltip />
           <Bar dataKey='count' fill='#4361ee' />
         </BarChart>

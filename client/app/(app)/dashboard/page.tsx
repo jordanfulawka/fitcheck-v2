@@ -9,6 +9,7 @@ import {
 export default async function Dashboard() {
   const res = await fetch(`${process.env.API_URL}/api/jobs/stats`);
   const { data } = await res.json();
+  console.log(data);
 
   return (
     <div className='bg-background h-full p-6'>
@@ -36,7 +37,7 @@ export default async function Dashboard() {
             <CalendarCheck2 size={32} color={'#8429c8'} />
           </div>
           <p className='text-secondary text-4xl font-bold pl-5'>
-            {data.result.interviewing}
+            {data.result.interviewing.length}
           </p>
         </div>
         <div className='border border-[#dee2e6] flex-1 bg-white rounded-lg'>
@@ -45,7 +46,7 @@ export default async function Dashboard() {
             <CircleCheckBig size={32} color={'#1a7a4a'} />
           </div>
           <p className='text-[#1a7a4a] text-4xl font-bold pl-5'>
-            {data.result.offer}
+            {data.result.offer.length}
           </p>
         </div>
         <div className='border border-[#dee2e6] flex-1 bg-white rounded-lg'>
@@ -54,7 +55,7 @@ export default async function Dashboard() {
             <Ban size={32} color={'#ba1a1a'} />
           </div>
           <p className='text-error text-4xl font-bold pl-5'>
-            {data.result.rejected}
+            {data.result.rejected.length}
           </p>
         </div>
       </div>
