@@ -20,7 +20,7 @@ export default function Sidebar() {
       <ul>
         <Link href='/dashboard'>
           <li
-            className={`flex gap-2 p-5 rounded-lg font-semibold ${pathname === '/dashboard' ? 'bg-surface-container-high text-primary' : ''}`}
+            className={`flex gap-2 p-5 rounded-lg font-semibold border-l-4 border-transparent ${pathname === '/dashboard' ? 'bg-surface-container-high text-primary border-l-secondary' : ''}`}
           >
             <LayoutDashboard />
             Dashboard
@@ -28,7 +28,7 @@ export default function Sidebar() {
         </Link>
         <Link href='/status-tracker'>
           <li
-            className={`flex gap-2 p-5 rounded-lg font-semibold  ${pathname === '/status-tracker' ? 'bg-surface-container-high text-primary ' : ''}`}
+            className={`flex gap-2 p-5 rounded-lg font-semibold border-l-4 border-transparent ${pathname === '/status-tracker' ? 'bg-surface-container-high text-primary border-l-secondary' : ''}`}
           >
             <SquareKanban />
             Status Tracker
@@ -36,7 +36,7 @@ export default function Sidebar() {
         </Link>
         <Link href='/job-list'>
           <li
-            className={`flex gap-2 p-5 rounded-lg font-semibold  ${pathname === '/job-list' ? 'bg-surface-container-high text-primary' : ''}`}
+            className={`flex gap-2 p-5 rounded-lg font-semibold border-l-4 border-transparent ${pathname === '/job-list' ? 'bg-surface-container-high text-primary border-l-secondary' : ''}`}
           >
             <ClipboardList />
             Job List
@@ -44,7 +44,7 @@ export default function Sidebar() {
         </Link>
         <Link href='ai-matcher'>
           <li
-            className={`flex gap-2 p-5 rounded-lg font-semibold ${pathname === '/ai-matcher' ? 'bg-surface-container-high text-primary' : ''}`}
+            className={`flex gap-2 p-5 rounded-lg font-semibold border-l-4 border-transparent ${pathname === '/ai-matcher' ? 'bg-surface-container-high text-primary border-l-secondary' : ''}`}
           >
             <Brain />
             AI Matcher
