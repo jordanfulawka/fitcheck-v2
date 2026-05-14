@@ -9,56 +9,90 @@ import {
 export default async function Dashboard() {
   const res = await fetch(`${process.env.API_URL}/api/jobs/stats`);
   const { data } = await res.json();
-  console.log(data);
 
   return (
-    <div className='bg-background h-full p-6'>
-      <div className='p-5'>
-        <h1 className='text-2xl font-bold'>Overview</h1>
-        <p>Hello! Ready to apply for some more jobs?</p>
+    <div className='bg-background h-full p-6 flex flex-col gap-6'>
+      <div>
+        <h1 className='text-2xl font-semibold tracking-tight text-on-surface'>
+          Overview
+        </h1>
+        <p className='text-sm text-on-surface-variant mt-1'>
+          Track your job search progress at a glance.
+        </p>
       </div>
-      <div className='flex gap-20 px-5 justify-between'>
-        <div className='border border-[#dee2e6] flex-1 bg-white h-32 rounded-lg'>
-          <div className='flex justify-between pt-4 px-4'>
-            <h1 className='text-lg font-bold text-gray-500'>
-              Total Applications
-            </h1>
-            <SendHorizonal size={32} color={'#2346d5'} />
+
+      <div className='grid grid-cols-4 gap-4'>
+        <div
+          className='bg-white border border-[#dee2e6] rounded-xl p-5'
+          style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
+        >
+          <div className='flex items-center justify-between mb-4'>
+            <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
+              Applications
+            </span>
+            <div className='p-2 rounded-lg' style={{ backgroundColor: '#2346d515' }}>
+              <SendHorizonal size={18} color='#2346d5' />
+            </div>
           </div>
-          <p className='text-primary text-4xl font-bold pl-5'>
-            {data.result.total}
-          </p>
+          <p className='text-4xl font-bold text-primary'>{data.result.total}</p>
+          <p className='text-sm text-on-surface-variant mt-1'>Total submitted</p>
         </div>
-        <div className='border border-[#dee2e6] flex-1 bg-white rounded-lg'>
-          <div className='flex justify-between pt-4 px-4'>
-            <h1 className='text-lg font-bold text-gray-500'>
-              Interviews Scheduled
-            </h1>
-            <CalendarCheck2 size={32} color={'#8429c8'} />
+
+        <div
+          className='bg-white border border-[#dee2e6] rounded-xl p-5'
+          style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
+        >
+          <div className='flex items-center justify-between mb-4'>
+            <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
+              Interviews
+            </span>
+            <div className='p-2 rounded-lg' style={{ backgroundColor: '#8429c815' }}>
+              <CalendarCheck2 size={18} color='#8429c8' />
+            </div>
           </div>
-          <p className='text-secondary text-4xl font-bold pl-5'>
+          <p className='text-4xl font-bold text-secondary'>
             {data.result.interviewing.length}
           </p>
+          <p className='text-sm text-on-surface-variant mt-1'>Currently scheduled</p>
         </div>
-        <div className='border border-[#dee2e6] flex-1 bg-white rounded-lg'>
-          <div className='flex justify-between pt-4 px-4'>
-            <h1 className='text-lg font-bold text-gray-500'>Offers Received</h1>
-            <CircleCheckBig size={32} color={'#1a7a4a'} />
+
+        <div
+          className='bg-white border border-[#dee2e6] rounded-xl p-5'
+          style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
+        >
+          <div className='flex items-center justify-between mb-4'>
+            <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
+              Offers
+            </span>
+            <div className='p-2 rounded-lg' style={{ backgroundColor: '#1a7a4a15' }}>
+              <CircleCheckBig size={18} color='#1a7a4a' />
+            </div>
           </div>
-          <p className='text-[#1a7a4a] text-4xl font-bold pl-5'>
+          <p className='text-4xl font-bold' style={{ color: '#1a7a4a' }}>
             {data.result.offer.length}
           </p>
+          <p className='text-sm text-on-surface-variant mt-1'>Received so far</p>
         </div>
-        <div className='border border-[#dee2e6] flex-1 bg-white rounded-lg'>
-          <div className='flex justify-between pt-4 px-4'>
-            <h1 className='text-lg font-bold text-gray-500'>Rejections</h1>
-            <Ban size={32} color={'#ba1a1a'} />
+
+        <div
+          className='bg-white border border-[#dee2e6] rounded-xl p-5'
+          style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
+        >
+          <div className='flex items-center justify-between mb-4'>
+            <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
+              Rejections
+            </span>
+            <div className='p-2 rounded-lg' style={{ backgroundColor: '#ba1a1a15' }}>
+              <Ban size={18} color='#ba1a1a' />
+            </div>
           </div>
-          <p className='text-error text-4xl font-bold pl-5'>
+          <p className='text-4xl font-bold text-error'>
             {data.result.rejected.length}
           </p>
+          <p className='text-sm text-on-surface-variant mt-1'>Total received</p>
         </div>
       </div>
+
       <ApplicationActivityChart />
     </div>
   );

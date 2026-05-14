@@ -13,7 +13,6 @@ import {
 export default function ApplicationActivityChart() {
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('weekly');
   const [data, setData] = useState([]);
-
   const { refreshCount } = useJobModal();
 
   useEffect(() => {
@@ -24,27 +23,67 @@ export default function ApplicationActivityChart() {
   }, [period, refreshCount]);
 
   return (
-    <div className='w-[70%] mt-5'>
-      <div className='flex gap-2 justify-end'>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
-          onClick={() => setPeriod('weekly')}
-        >
-          Weekly
-        </button>
-        <button
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full'
-          onClick={() => setPeriod('monthly')}
-        >
-          Monthly
-        </button>
+    <div
+      className='bg-white border border-[#dee2e6] rounded-xl p-5 flex-1'
+      style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
+    >
+      <div className='flex items-center justify-between mb-6'>
+        <div>
+          <h2 className='text-base font-semibold text-on-surface'>
+            Application Activity
+          </h2>
+          <p className='text-sm text-on-surface-variant mt-0.5'>
+            Jobs applied over time
+          </p>
+        </div>
+        <div className='flex gap-1 bg-surface-container-low p-1 rounded-lg'>
+          <button
+            onClick={() => setPeriod('weekly')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+              period === 'weekly'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Weekly
+          </button>
+          <button
+            onClick={() => setPeriod('monthly')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+              period === 'monthly'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Monthly
+          </button>
+        </div>
       </div>
-      <ResponsiveContainer width='100%' height={300}>
-        <BarChart data={data}>
-          <XAxis dataKey='_id' />
-          <YAxis dataKey='count' allowDecimals={false} />
-          <Tooltip />
-          <Bar dataKey='count' fill='#4361ee' />
+
+      <ResponsiveContainer width='100%' height={280}>
+        <BarChart data={data} barSize={32}>
+          <XAxis
+            dataKey='_id'
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12, fill: '#444655' }}
+          />
+          <YAxis
+            dataKey='count'
+            allowDecimals={false}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12, fill: '#444655' }}
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: '8px',
+              border: '1px solid #dee2e6',
+              boxShadow: '0 4px 12px rgba(26,26,46,0.05)',
+            }}
+            cursor={{ fill: '#4361ee08' }}
+          />
+          <Bar dataKey='count' fill='#4361ee' radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

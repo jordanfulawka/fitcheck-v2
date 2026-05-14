@@ -9,3 +9,5 @@ export const updateJobStatus = (id: string, status: string) =>
   api.patch(`/jobs/${id}`, { status });
 
 export const createJob = (data: Partial<Job>) => api.post('/jobs', data);
+
+export const deleteJob = (id: string) => api.delete(`/jobs/${id}`);
