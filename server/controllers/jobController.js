@@ -18,7 +18,7 @@ exports.getAllJobs = async (req, res) => {
       });
     }
 
-    const jobs = await Job.find();
+    const jobs = await Job.find({}).sort('dateApplied');
     res.status(200).json({
       status: 'success',
       results: jobs.length,

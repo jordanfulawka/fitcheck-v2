@@ -1,4 +1,8 @@
+'use client';
+
+import { deleteJob } from '@/lib/api/jobs';
 import { Job } from '@/types';
+import { Trash2 } from 'lucide-react';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]',
@@ -7,7 +11,13 @@ const statusStyles: Record<string, string> = {
   Rejected: 'bg-[#ba1a1a]/10 border border-[#ba1a1a] text-[#ba1a1a]',
 };
 
-export default function JobListItem({ job }: { job: Job }) {
+export default function JobListItem({
+  job,
+  onDelete,
+}: {
+  job: Job;
+  onDelete: () => void;
+}) {
   const formattedDate = job.dateApplied
     ? new Date(job.dateApplied).toLocaleDateString('en-US', {
         month: 'short',
@@ -15,8 +25,14 @@ export default function JobListItem({ job }: { job: Job }) {
         year: 'numeric',
       })
     : '-';
+
+  async function handleDelete(id: string) {
+    await deleteJob(id);
+    onDelete();
+  }
+
   return (
-    <div className='grid grid-cols-4 px-6 py-4 border-b border-[#dee2e6] hover:bg-surface-container-low items-center last:border-b-0'>
+    <div className='grid grid-cols-5 px-6 py-6 border-b border-[#dee2e6] hover:bg-surface-container-low items-center last:border-b-0'>
       <span className='text-sm font-semibold text-[#1a1a2e]'>
         {job.company}
       </span>
@@ -27,6 +43,12 @@ export default function JobListItem({ job }: { job: Job }) {
       >
         {job.status}
       </span>
+      <button
+        onClick={() => handleDelete(job._id)}
+        className='p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors w-fit'
+      >
+        <Trash2 size={16} />
+      </button>
     </div>
   );
 }
