@@ -1,6 +1,7 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/react';
+import React from 'react';
 
 export default function KanbanColumn({
   id,
@@ -11,21 +12,30 @@ export default function KanbanColumn({
   colour: string;
   children: React.ReactNode;
 }) {
-  const { ref } = useDroppable({
-    id,
-  });
+  const { ref } = useDroppable({ id });
+  const count = React.Children.count(children);
+
   return (
     <div
       ref={ref}
-      className='border border-black bg-[#f1f3f5] rounded-t-xl rounded-xl w-90 min-hg-74 p-4'
+      className='flex flex-col flex-1 min-h-130 bg-surface-container-low rounded-xl border border-[#dee2e6] overflow-hidden'
     >
-      <span
-        className={`text-lg font-semibold px-4 py-5`}
-        style={{ color: colour }}
-      >
-        {id}
-      </span>
-      {children}
+      <div className='h-1 w-full' style={{ backgroundColor: colour }} />
+      <div className='flex items-center justify-between px-4 py-3 border-b border-[#dee2e6]'>
+        <span
+          className='text-sm font-semibold tracking-wide'
+          style={{ color: colour }}
+        >
+          {id}
+        </span>
+        <span
+          className='text-xs font-semibold px-2 py-0.5 rounded-full'
+          style={{ backgroundColor: `${colour}20`, color: colour }}
+        >
+          {count}
+        </span>
+      </div>
+      <div className='flex flex-col gap-3 p-3 flex-1'>{children}</div>
     </div>
   );
 }

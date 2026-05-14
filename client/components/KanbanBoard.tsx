@@ -6,9 +6,12 @@ import KanbanColumn from './KanbanColumn';
 import { DragDropProvider } from '@dnd-kit/react';
 import { Job } from '@/types';
 import { updateJobStatus } from '@/lib/api/jobs';
+import { useJobModal } from '@/app/contexts/JobModalContext';
 
 export default function KanbanBoard() {
   const [jobs, setJobs] = useState<Job[]>([]);
+
+  const { refreshCount } = useJobModal();
 
   useEffect(() => {
     async function fetchJobs() {
@@ -18,7 +21,7 @@ export default function KanbanBoard() {
     }
 
     fetchJobs();
-  }, []);
+  }, [refreshCount]);
 
   return (
     <DragDropProvider
@@ -63,14 +66,14 @@ export default function KanbanBoard() {
               <KanbanCard key={job._id} job={job} />
             ))}
         </KanbanColumn>
-        <KanbanColumn id='Offer' colour='red'>
+        <KanbanColumn id='Offer' colour='#1a7a4a'>
           {jobs
             .filter((job) => job.status === 'Offer')
             .map((job) => (
               <KanbanCard key={job._id} job={job} />
             ))}
         </KanbanColumn>
-        <KanbanColumn id='Rejected' colour='gray'>
+        <KanbanColumn id='Rejected' colour='#ba1a1a'>
           {jobs
             .filter((job) => job.status === 'Rejected')
             .map((job) => (
