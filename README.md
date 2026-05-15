@@ -134,7 +134,3 @@ fitcheck-v2/
 - [ ] Export applications to CSV
 
 ---
-
-## License
-
-MIT

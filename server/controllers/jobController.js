@@ -8,7 +8,7 @@ exports.getAllJobs = async (req, res) => {
       const skip = (page - 1) * limit;
 
       const [jobs, total] = await Promise.all([
-        Job.find().skip(skip).limit(limit),
+        Job.find().sort('dateApplied').skip(skip).limit(limit),
         Job.countDocuments(),
       ]);
 
