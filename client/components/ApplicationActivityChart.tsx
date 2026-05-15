@@ -1,5 +1,6 @@
 'use client';
 import { useJobModal } from '@/app/contexts/JobModalContext';
+import { getActivityChartJobs } from '@/lib/api/jobs';
 import { useState, useEffect } from 'react';
 import {
   BarChart,
@@ -15,11 +16,19 @@ export default function ApplicationActivityChart() {
   const [data, setData] = useState([]);
   const { refreshCount } = useJobModal();
 
+  // useEffect(() => {
+  //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/chart?period=${period}`)
+  //     .then((res) => res.json())
+  //     .then((res) => setData(res.data.filled))
+  //     .catch((err) => console.log(err.message));
+  // }, [period, refreshCount]);
+
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/chart?period=${period}`)
-      .then((res) => res.json())
-      .then((res) => setData(res.data.filled))
-      .catch((err) => console.log(err.message));
+    async function fetchJobs() {
+      const data = await getActivityChartJobs(period);
+      setData(data.data.data.filled);
+    }
+    fetchJobs();
   }, [period, refreshCount]);
 
   return (

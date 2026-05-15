@@ -5,7 +5,7 @@ import KanbanCard from './KanbanCard';
 import KanbanColumn from './KanbanColumn';
 import { DragDropProvider } from '@dnd-kit/react';
 import { Job } from '@/types';
-import { updateJobStatus } from '@/lib/api/jobs';
+import { getJobs, updateJobStatus } from '@/lib/api/jobs';
 import { useJobModal } from '@/app/contexts/JobModalContext';
 
 export default function KanbanBoard() {
@@ -13,11 +13,22 @@ export default function KanbanBoard() {
 
   const { refreshCount } = useJobModal();
 
+  // useEffect(() => {
+  //   async function fetchJobs() {
+  //     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`);
+  //     const res = await data.json();
+  //     setJobs(res.data.jobs);
+  //     console.log(res.data.jobs);
+  //   }
+
+  //   fetchJobs();
+  // }, [refreshCount]);
+
   useEffect(() => {
     async function fetchJobs() {
-      const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`);
-      const res = await data.json();
-      setJobs(res.data.jobs);
+      const data = await getJobs();
+      setJobs(data.data.data.jobs);
+      console.log(data.data.data.jobs);
     }
 
     fetchJobs();

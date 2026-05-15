@@ -13,7 +13,6 @@ import AddJobButton from './AddJobButton';
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { openModal } = useJobModal();
   return (
     <nav className='w-64 h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col items-center justify-between shrink-0'>
       <div>

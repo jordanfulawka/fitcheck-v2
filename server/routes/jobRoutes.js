@@ -13,6 +13,8 @@ router.route('/jobs/stats').get(jobController.getJobsByStatus);
 
 router.route('/jobs/chart').get(jobController.getRecentJobs);
 
+router.route('/jobs/jobsBypass').get(jobController.getAllJobsBypass);
+
 router
   .route('/jobs/:id')
   .get(jobController.getJob)

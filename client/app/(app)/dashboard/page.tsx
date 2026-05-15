@@ -1,14 +1,23 @@
 import ApplicationActivityChart from '@/components/ApplicationActivityChart';
+import { getDashboardJobs } from '@/lib/api/jobs';
 import {
   Ban,
   CalendarCheck2,
   CircleCheckBig,
   SendHorizonal,
 } from 'lucide-react';
+import { getServerSession } from 'next-auth';
 
 export default async function Dashboard() {
-  const res = await fetch(`${process.env.API_URL}/api/jobs/stats`);
+  const session = await getServerSession();
+  const email = session?.user?.email;
+
+  const res = await fetch(`${process.env.API_URL}/api/jobs/stats`, {
+    headers: { 'x-user-email': email ?? '' },
+  });
+
   const { data } = await res.json();
+  
 
   return (
     <div className='bg-background h-full p-6 flex flex-col gap-6'>
@@ -30,12 +39,17 @@ export default async function Dashboard() {
             <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
               Applications
             </span>
-            <div className='p-2 rounded-lg' style={{ backgroundColor: '#2346d515' }}>
+            <div
+              className='p-2 rounded-lg'
+              style={{ backgroundColor: '#2346d515' }}
+            >
               <SendHorizonal size={18} color='#2346d5' />
             </div>
           </div>
           <p className='text-4xl font-bold text-primary'>{data.result.total}</p>
-          <p className='text-sm text-on-surface-variant mt-1'>Total submitted</p>
+          <p className='text-sm text-on-surface-variant mt-1'>
+            Total submitted
+          </p>
         </div>
 
         <div
@@ -46,14 +60,19 @@ export default async function Dashboard() {
             <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
               Interviews
             </span>
-            <div className='p-2 rounded-lg' style={{ backgroundColor: '#8429c815' }}>
+            <div
+              className='p-2 rounded-lg'
+              style={{ backgroundColor: '#8429c815' }}
+            >
               <CalendarCheck2 size={18} color='#8429c8' />
             </div>
           </div>
           <p className='text-4xl font-bold text-secondary'>
             {data.result.interviewing.length}
           </p>
-          <p className='text-sm text-on-surface-variant mt-1'>Currently scheduled</p>
+          <p className='text-sm text-on-surface-variant mt-1'>
+            Currently scheduled
+          </p>
         </div>
 
         <div
@@ -64,14 +83,19 @@ export default async function Dashboard() {
             <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
               Offers
             </span>
-            <div className='p-2 rounded-lg' style={{ backgroundColor: '#1a7a4a15' }}>
+            <div
+              className='p-2 rounded-lg'
+              style={{ backgroundColor: '#1a7a4a15' }}
+            >
               <CircleCheckBig size={18} color='#1a7a4a' />
             </div>
           </div>
           <p className='text-4xl font-bold' style={{ color: '#1a7a4a' }}>
             {data.result.offer.length}
           </p>
-          <p className='text-sm text-on-surface-variant mt-1'>Received so far</p>
+          <p className='text-sm text-on-surface-variant mt-1'>
+            Received so far
+          </p>
         </div>
 
         <div
@@ -82,7 +106,10 @@ export default async function Dashboard() {
             <span className='text-xs font-semibold uppercase tracking-wide text-on-surface-variant'>
               Rejections
             </span>
-            <div className='p-2 rounded-lg' style={{ backgroundColor: '#ba1a1a15' }}>
+            <div
+              className='p-2 rounded-lg'
+              style={{ backgroundColor: '#ba1a1a15' }}
+            >
               <Ban size={18} color='#ba1a1a' />
             </div>
           </div>

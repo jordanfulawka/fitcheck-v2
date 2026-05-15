@@ -11,3 +11,8 @@ export const updateJobStatus = (id: string, status: string) =>
 export const createJob = (data: Partial<Job>) => api.post('/jobs', data);
 
 export const deleteJob = (id: string) => api.delete(`/jobs/${id}`);
+
+export const getDashboardJobs = () => api.get('/jobs/stats');
+
+export const getActivityChartJobs = (period: string) =>
+  api.get(`/jobs/chart?period=${period}`);

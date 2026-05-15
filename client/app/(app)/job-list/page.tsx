@@ -9,13 +9,13 @@ import { useEffect, useState } from 'react';
 export default function JobList() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState();
+  const [totalPages, setTotalPages] = useState(1);
 
   async function fetchJobs() {
     const { data } = await getJobsPaginated(page);
     console.log(data);
     setJobs(data.data.jobs);
-    setTotalPages(data.data.totalPages);
+    setTotalPages(Math.max(1, data.data.totalPages));
   }
 
   const { refreshCount } = useJobModal();

@@ -2,6 +2,7 @@
 
 import { createJob } from '@/lib/api/jobs';
 import { X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 interface Props {

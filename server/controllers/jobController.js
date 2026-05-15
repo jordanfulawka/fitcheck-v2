@@ -8,8 +8,11 @@ exports.getAllJobs = async (req, res) => {
       const skip = (page - 1) * limit;
 
       const [jobs, total] = await Promise.all([
-        Job.find().sort('dateApplied').skip(skip).limit(limit),
-        Job.countDocuments(),
+        Job.find({ userId: req.headers['x-user-email'] })
+          .sort('dateApplied')
+          .skip(skip)
+          .limit(limit),
+        Job.countDocuments({ userId: req.headers['x-user-email'] }),
       ]);
 
       return res.status(200).json({
@@ -18,7 +21,27 @@ exports.getAllJobs = async (req, res) => {
       });
     }
 
-    const jobs = await Job.find({}).sort('dateApplied');
+    const jobs = await Job.find({ userId: req.headers['x-user-email'] }).sort(
+      'dateApplied',
+    );
+    res.status(200).json({
+      status: 'success',
+      results: jobs.length,
+      data: {
+        jobs,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'error fetching all jobs',
+    });
+  }
+};
+
+exports.getAllJobsBypass = async (req, res) => {
+  try {
+    const jobs = await Job.find({});
     res.status(200).json({
       status: 'success',
       results: jobs.length,
@@ -35,7 +58,10 @@ exports.getAllJobs = async (req, res) => {
 };
 
 exports.getJob = async (req, res) => {
-  const job = await Job.findById(req.params.id);
+  const job = await Job.findOne({
+    _id: req.params.id,
+    userId: req.headers['x-user-email'],
+  });
 
   res.status(200).json({
     status: 'success',
@@ -47,7 +73,10 @@ exports.getJob = async (req, res) => {
 
 exports.createJob = async (req, res) => {
   try {
-    const newJob = await Job.create(req.body);
+    const newJob = await Job.create({
+      ...req.body,
+      userId: req.headers['x-user-email'],
+    });
     res.status(201).json({
       status: 'success',
       data: {
@@ -64,9 +93,13 @@ exports.createJob = async (req, res) => {
 
 exports.updateJob = async (req, res) => {
   try {
-    const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const updatedJob = await Job.findOneAndUpdate(
+      { _id: req.params.id, userId: req.headers['x-user-email'] },
+      req.body,
+      {
+        new: true,
+      },
+    );
     res.status(201).json({
       status: 'success',
       data: {
@@ -83,7 +116,10 @@ exports.updateJob = async (req, res) => {
 
 exports.deleteJob = async (req, res) => {
   try {
-    await Job.findByIdAndDelete(req.params.id);
+    await Job.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.headers['x-user-email'],
+    });
     res.status(204).json({
       status: 'success',
     });
@@ -97,7 +133,7 @@ exports.deleteJob = async (req, res) => {
 
 exports.getJobsByStatus = async (req, res) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find({ userId: req.headers['x-user-email'] });
 
     const result = {
       total: 0,
@@ -161,6 +197,7 @@ exports.getRecentJobs = async (req, res) => {
     const data = await Job.aggregate([
       {
         $match: {
+          userId: req.headers['x-user-email'],
           dateApplied: { $gte: startDate },
         },
       },
