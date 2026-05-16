@@ -28,7 +28,6 @@ export default function KanbanBoard() {
     async function fetchJobs() {
       const data = await getJobs();
       setJobs(data.data.data.jobs);
-      console.log(data.data.data.jobs);
     }
 
     fetchJobs();
