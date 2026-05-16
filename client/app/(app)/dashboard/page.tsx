@@ -12,12 +12,11 @@ export default async function Dashboard() {
   const session = await getServerSession();
   const email = session?.user?.email;
 
-  const res = await fetch(`${process.env.API_URL}/api/jobs/stats`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/stats`, {
     headers: { 'x-user-email': email ?? '' },
   });
 
   const { data } = await res.json();
-  
 
   return (
     <div className='bg-background h-full p-6 flex flex-col gap-6'>
