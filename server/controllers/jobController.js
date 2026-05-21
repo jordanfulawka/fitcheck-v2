@@ -2,17 +2,28 @@ const Job = require('../models/jobModel');
 
 exports.getAllJobs = async (req, res) => {
   try {
+    const filter = { userId: req.headers['x-user-email'] };
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+    if (req.query.search) {
+      filter.$or = [
+        { company: { $regex: req.query.search, $options: 'i' } },
+        { role: { $regex: req.query.search, $options: 'i' } },
+      ];
+    }
+
     if (req.query.page) {
       const page = Number(req.query.page);
       const limit = 5;
       const skip = (page - 1) * limit;
 
       const [jobs, total] = await Promise.all([
-        Job.find({ userId: req.headers['x-user-email'] })
-          .sort('dateApplied')
+        Job.find(filter)
+          .sort({ dateApplied: -1, _id: -1 })
           .skip(skip)
           .limit(limit),
-        Job.countDocuments({ userId: req.headers['x-user-email'] }),
+        Job.countDocuments(filter),
       ]);
 
       return res.status(200).json({
@@ -21,9 +32,7 @@ exports.getAllJobs = async (req, res) => {
       });
     }
 
-    const jobs = await Job.find({ userId: req.headers['x-user-email'] }).sort(
-      'dateApplied',
-    );
+    const jobs = await Job.find(filter).sort({ dateApplied: -1, _id: -1 });
     res.status(200).json({
       status: 'success',
       results: jobs.length,
@@ -50,6 +59,7 @@ exports.getAllJobsBypass = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error(err);
     res.status(404).json({
       status: 'fail',
       message: 'error fetching all jobs',

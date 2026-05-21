@@ -3,7 +3,20 @@ import api from './axios';
 
 export const getJobs = () => api.get('/jobs');
 
-export const getJobsPaginated = (page: number) => api.get(`/jobs?page=${page}`);
+export const getJobsPaginated = (
+  page: number,
+  search?: string,
+  status?: string,
+) => {
+  const params: Record<string, string | number> = { page };
+  if (search) {
+    params.search = search;
+  }
+  if (status) {
+    params.status = status;
+  }
+  return api.get(`/jobs`, { params });
+};
 
 export const updateJobStatus = (id: string, status: string) =>
   api.patch(`/jobs/${id}`, { status });
