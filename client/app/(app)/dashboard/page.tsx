@@ -1,5 +1,4 @@
 import ApplicationActivityChart from '@/components/ApplicationActivityChart';
-import { getDashboardJobs } from '@/lib/api/jobs';
 import {
   Ban,
   CalendarCheck2,

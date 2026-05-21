@@ -1,8 +1,9 @@
 'use client';
 
+import { useJobModal } from '@/app/contexts/JobModalContext';
 import { deleteJob } from '@/lib/api/jobs';
 import { Job } from '@/types';
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]',
@@ -31,6 +32,8 @@ export default function JobListItem({
     onDelete();
   }
 
+  const { openEditModal } = useJobModal();
+
   return (
     <div className='grid grid-cols-5 px-6 py-6 border-b border-[#dee2e6] hover:bg-surface-container-low items-center last:border-b-0'>
       <span className='text-sm font-semibold text-[#1a1a2e]'>
@@ -43,12 +46,20 @@ export default function JobListItem({
       >
         {job.status}
       </span>
-      <button
-        onClick={() => handleDelete(job._id)}
-        className='p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors w-fit'
-      >
-        <Trash2 size={16} />
-      </button>
+      <div>
+        <button
+          onClick={() => handleDelete(job._id)}
+          className='p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors w-fit'
+        >
+          <Trash2 size={16} />
+        </button>
+        <button
+          onClick={() => openEditModal(job)}
+          className='p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors w-fit'
+        >
+          <Pencil size={16} />
+        </button>
+      </div>
     </div>
   );
 }

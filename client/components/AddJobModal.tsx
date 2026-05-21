@@ -1,14 +1,16 @@
 'use client';
 
-import { createJob } from '@/lib/api/jobs';
+import { createJob, updateJob } from '@/lib/api/jobs';
+import { Job } from '@/types';
 import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  job?: Job | null;
 }
 
 const inputClass =
@@ -17,7 +19,12 @@ const inputClass =
 const labelClass =
   'block text-sm font-semibold tracking-wide text-on-surface-variant mb-1';
 
-export default function AddJobModal({ isOpen, onClose, onSuccess }: Props) {
+export default function AddJobModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  job,
+}: Props) {
   const [company, setCompany] = useState('');
   const [role, setRole] = useState('');
   const [location, setLocation] = useState('');
@@ -29,6 +36,26 @@ export default function AddJobModal({ isOpen, onClose, onSuccess }: Props) {
   const [notes, setNotes] = useState('');
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (job) {
+      setCompany(job.company);
+      setRole(job.role);
+      setLocation(job.location ?? '');
+      setDateApplied(job.dateApplied?.split('T')[0] ?? '');
+      setApplicationURL(job.applicationURL ?? '');
+      setStatus(job.status);
+      setNotes(job.notes ?? '');
+    } else {
+      setCompany('');
+      setRole('');
+      setLocation('');
+      setDateApplied(new Date().toISOString().split('T')[0]);
+      setApplicationURL('');
+      setStatus('Applied');
+      setNotes('');
+    }
+  }, [job]);
 
   if (!isOpen) {
     return null;
@@ -48,8 +75,20 @@ export default function AddJobModal({ isOpen, onClose, onSuccess }: Props) {
     };
 
     setLoading(true);
-    await createJob(newJob);
+    if (job) {
+      await updateJob(job._id, newJob);
+    } else {
+      await createJob(newJob);
+    }
     setLoading(false);
+
+    setCompany('');
+    setRole('');
+    setLocation('');
+    setDateApplied(new Date().toISOString().split('T')[0]);
+    setApplicationURL('');
+    setStatus('Applied');
+    setNotes('');
     onSuccess();
   }
 
@@ -65,7 +104,7 @@ export default function AddJobModal({ isOpen, onClose, onSuccess }: Props) {
       >
         <div className='flex items-center justify-between px-6 py-5 border-b border-[#dee2e6]'>
           <h2 className='text-xl font-semibold tracking-tight text-on-surface'>
-            Add Job
+            {job ? 'Edit Job' : 'Add Job'}
           </h2>
           <button
             onClick={onClose}
@@ -169,7 +208,7 @@ export default function AddJobModal({ isOpen, onClose, onSuccess }: Props) {
               disabled={loading}
               className='px-4 py-2 text-sm font-semibold bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors'
             >
-              {loading ? 'Saving...' : 'Add Job'}
+              {loading ? 'Saving...' : job ? 'Save Changes' : 'Add Job'}
             </button>
           </div>
         </form>

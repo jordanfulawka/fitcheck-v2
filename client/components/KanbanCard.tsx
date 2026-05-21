@@ -25,13 +25,20 @@ export default function KanbanCard({ job }: Props) {
       style={{ borderLeft: `3px solid ${colour}` }}
     >
       <div className='font-semibold text-sm text-on-surface'>{job.role}</div>
-      <div className='text-sm text-on-surface-variant mt-0.5'>{job.company}</div>
+      <div className='text-sm text-on-surface-variant mt-0.5'>
+        {job.company}
+      </div>
       {job.location && (
         <div className='text-xs text-outline mt-1'>{job.location}</div>
       )}
       {job.dateApplied && (
         <div className='text-xs text-outline mt-2 pt-2 border-t border-[#dee2e6]'>
-          {new Date(job.dateApplied).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          {new Date(job.dateApplied).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            timeZone: 'UTC',
+          })}
         </div>
       )}
     </div>
