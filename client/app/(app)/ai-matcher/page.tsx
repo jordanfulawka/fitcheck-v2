@@ -1,17 +1,10 @@
 'use client';
 
+import JobSelectionModal from '@/components/JobSelectionModal';
 import { getMatchScore } from '@/lib/api/match';
 import { Upload, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
 import { useRef, useState } from 'react';
-
-interface MatchResult {
-  matchScore: number;
-  matchedSkills: string[];
-  missingSkills: string[];
-  strengths: string[];
-  gaps: string[];
-  recommendation: string;
-}
+import { MatchResult } from '@/types';
 
 function ScoreRing({ score }: { score: number }) {
   const radius = 70;
@@ -68,6 +61,7 @@ export default function AIMatcher() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<MatchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,13 +265,25 @@ export default function AIMatcher() {
               </ul>
             </div>
           </div>
-
+          <JobSelectionModal
+            isOpen={isJobModalOpen}
+            result={result}
+            onClose={() => setIsJobModalOpen(false)}
+          />
           {/* AI Recommendation */}
           <div className='bg-white border border-[#dee2e6] rounded-xl shadow-card p-6 border-l-4 border-l-secondary'>
             <h2 className='text-base font-semibold mb-3'>AI Recommendation</h2>
             <p className='text-sm text-on-surface-variant leading-relaxed'>
               {result.recommendation}
             </p>
+          </div>
+          <div className='pb-5'>
+            <button
+              onClick={() => setIsJobModalOpen(true)}
+              className='py-3 px-5 rounded-lg text-white font-semibold text-sm bg-linear-to-r from-primary-container to-secondary hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+            >
+              Save to Job
+            </button>
           </div>
         </div>
       )}

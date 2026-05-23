@@ -11,6 +11,15 @@ const jobSchema = new Schema({
   status: String,
   priority: String,
   notes: String,
+  matchResult: {
+    matchScore: Number,
+    matchedSkills: [String],
+    missingSkills: [String],
+    strengths: [String],
+    gaps: [String],
+    recommendation: String,
+    savedAt: Date,
+  },
 });
 
 const Job = mongoose.model('Job', jobSchema);
