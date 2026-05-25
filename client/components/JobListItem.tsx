@@ -3,7 +3,9 @@
 import { useJobModal } from '@/app/contexts/JobModalContext';
 import { deleteJob } from '@/lib/api/jobs';
 import { Job } from '@/types';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Sparkles, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import MatchResultModal from './MatchResultModal';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]',
@@ -19,6 +21,8 @@ export default function JobListItem({
   job: Job;
   onDelete: () => void;
 }) {
+  const [showMatchModal, setShowMatchModal] = useState(false);
+
   const formattedDate = job.dateApplied
     ? new Date(job.dateApplied).toLocaleDateString('en-US', {
         month: 'short',
@@ -35,7 +39,7 @@ export default function JobListItem({
   const { openEditModal } = useJobModal();
 
   return (
-    <div className='grid grid-cols-5 px-6 py-6 border-b border-[#dee2e6] hover:bg-surface-container-low items-center last:border-b-0'>
+    <div className='grid grid-cols-[1fr_1fr_1fr_1fr_80px] px-6 py-6 border-b border-[#dee2e6] hover:bg-surface-container-low items-center last:border-b-0'>
       <span className='text-sm font-semibold text-[#1a1a2e]'>
         {job.company}
       </span>
@@ -46,7 +50,13 @@ export default function JobListItem({
       >
         {job.status}
       </span>
-      <div>
+      {showMatchModal && (
+        <MatchResultModal
+          result={job.matchResult}
+          onClose={() => setShowMatchModal(false)}
+        />
+      )}
+      <div className='flex justify-center'>
         <button
           onClick={() => handleDelete(job._id)}
           className='p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors w-fit'
@@ -58,6 +68,12 @@ export default function JobListItem({
           className='p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors w-fit'
         >
           <Pencil size={16} />
+        </button>
+        <button
+          onClick={() => setShowMatchModal(true)}
+          className='p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors w-fit'
+        >
+          <Sparkles size={16} />
         </button>
       </div>
     </div>

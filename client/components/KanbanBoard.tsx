@@ -10,19 +10,7 @@ import { useJobModal } from '@/app/contexts/JobModalContext';
 
 export default function KanbanBoard() {
   const [jobs, setJobs] = useState<Job[]>([]);
-
   const { refreshCount } = useJobModal();
-
-  // useEffect(() => {
-  //   async function fetchJobs() {
-  //     const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`);
-  //     const res = await data.json();
-  //     setJobs(res.data.jobs);
-  //     console.log(res.data.jobs);
-  //   }
-
-  //   fetchJobs();
-  // }, [refreshCount]);
 
   useEffect(() => {
     async function fetchJobs() {

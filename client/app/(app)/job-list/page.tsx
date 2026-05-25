@@ -71,7 +71,7 @@ export default function JobList() {
       </div>
 
       <div className='bg-white border border-[#dee2e6] rounded-xl shadow-card overflow-hidden h-130 flex flex-col'>
-        <div className='grid grid-cols-5 bg-[#f8f9fa] px-6 py-3 border-b border-[#dee2e6]'>
+        <div className='grid grid-cols-[1fr_1fr_1fr_1fr_80px] bg-[#f8f9fa] px-6 py-3 border-b border-[#dee2e6]'>
           <span className='text-xs font-semibold text-on-surface-variant uppercase tracking-wide'>
             Company
           </span>
@@ -83,6 +83,9 @@ export default function JobList() {
           </span>
           <span className='text-xs font-semibold text-on-surface-variant uppercase tracking-wide'>
             Status
+          </span>
+          <span className='text-xs font-semibold text-on-surface-variant uppercase tracking-wide'>
+            Actions
           </span>
         </div>
 

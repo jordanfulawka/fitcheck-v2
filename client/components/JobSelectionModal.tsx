@@ -30,7 +30,7 @@ export default function JobSelectionModal({
     try {
       await updateJob(id, { matchResult: { ...result, savedAt: new Date() } });
       onClose();
-    } catch (e) {
+    } catch {
       setError('Failed to save. Please try again');
     } finally {
       setLoading(false);
