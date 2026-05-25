@@ -1,10 +1,10 @@
 'use client';
 
 import { useJobModal } from '@/app/contexts/JobModalContext';
-import { deleteJob } from '@/lib/api/jobs';
+import { deleteJob, updateJobStatus } from '@/lib/api/jobs';
 import { Job } from '@/types';
 import { Pencil, Sparkles, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MatchResultModal from './MatchResultModal';
 
 const statusStyles: Record<string, string> = {
@@ -17,11 +17,14 @@ const statusStyles: Record<string, string> = {
 export default function JobListItem({
   job,
   onDelete,
+  onUpdate,
 }: {
   job: Job;
   onDelete: () => void;
+  onUpdate: () => void;
 }) {
   const [showMatchModal, setShowMatchModal] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(job.status);
 
   const formattedDate = job.dateApplied
     ? new Date(job.dateApplied).toLocaleDateString('en-US', {
@@ -36,6 +39,16 @@ export default function JobListItem({
     onDelete();
   }
 
+  async function handleStatusChange(newStatus: string) {
+    setCurrentStatus(newStatus);
+    await updateJobStatus(job._id, newStatus);
+    onUpdate();
+  }
+
+  useEffect(() => {
+    setCurrentStatus(job.status);
+  }, [job.status]);
+
   const { openEditModal } = useJobModal();
 
   return (
@@ -45,11 +58,16 @@ export default function JobListItem({
       </span>
       <span className='text-sm text-on-surface-variant'>{job.role}</span>
       <span className='text-sm text-outline'>{formattedDate}</span>
-      <span
-        className={`w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[job.status] ?? 'bg-[#dee2e6] text-[#1a1a2e]'}`}
+      <select
+        value={currentStatus}
+        onChange={(e) => handleStatusChange(e.target.value)}
+        className={`w-fit rounded-full px-3 py-1 text-xs font-semibold appearance-none cursor-pointer focus:outline-none ${statusStyles[currentStatus] ?? 'bg-[#dee2e6] text-[#1a1a2e]'}`}
       >
-        {job.status}
-      </span>
+        <option value='Applied'>Applied</option>
+        <option value='Interviewing'>Interviewing</option>
+        <option value='Offer'>Offer</option>
+        <option value='Rejected'>Rejected</option>
+      </select>
       {showMatchModal && (
         <MatchResultModal
           result={job.matchResult}

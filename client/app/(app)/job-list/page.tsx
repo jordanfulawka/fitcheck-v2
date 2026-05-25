@@ -91,7 +91,7 @@ export default function JobList() {
 
         <div className='min-h-75'>
           {jobs.map((job) => (
-            <JobListItem key={job._id} job={job} onDelete={fetchJobs} />
+            <JobListItem key={job._id} job={job} onDelete={fetchJobs} onUpdate={fetchJobs} />
           ))}
         </div>
 
