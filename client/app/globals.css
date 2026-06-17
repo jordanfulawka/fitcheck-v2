@@ -55,6 +55,10 @@
 
   --shadow-card: 0 4px 12px rgba(26, 26, 46, 0.05);
   --shadow-elevated: 0 12px 24px rgba(26, 26, 46, 0.08);
+  --shadow-glass: 0 1px 2px rgba(26, 26, 46, 0.06),
+    0 16px 32px rgba(67, 97, 238, 0.1);
+  --shadow-glass-hover: 0 1px 2px rgba(26, 26, 46, 0.08),
+    0 24px 48px rgba(67, 97, 238, 0.16);
 }
 
 body {

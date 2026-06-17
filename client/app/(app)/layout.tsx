@@ -4,7 +4,7 @@ import TopBar from '@/components/TopBar';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen '>
       <AppWrapper>
         <Sidebar />
         <div className='flex-1 flex flex-col'>

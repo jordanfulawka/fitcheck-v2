@@ -79,7 +79,9 @@ Following are instructions to install and setup the project should you want to r
 Jordan Fulawka - [jordan.fulawka@outlook.com](mailto:jordan.fulawka@outlook.com)
 
 Portfolio - [jordanfulawka.ca](https://jordanfulawka.ca)
+
 LinkedIn: [linkedin.com/in/jordan-fulawka](https://www.linkedin.com/in/jordanfulawka/)
+
 GitHub: [@jordanfulawka](https://github.com/jordanfulawka)
 
 Project Link: [github.com/jordanfulawka/fitcheck-v2](https://github.com/jordanfulawka/fitcheck-v2)

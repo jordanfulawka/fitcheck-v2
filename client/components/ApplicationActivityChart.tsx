@@ -31,6 +31,10 @@ export default function ApplicationActivityChart() {
     fetchJobs();
   }, [period, refreshCount]);
 
+  useEffect(() => {
+    console.log(data);
+  });
+
   return (
     <div
       className='bg-white border border-[#dee2e6] rounded-xl p-5 flex-1'

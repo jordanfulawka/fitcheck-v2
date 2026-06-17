@@ -8,7 +8,7 @@ export default function AddJobButton() {
   return (
     <button
       onClick={openModal}
-      className='py-3 px-5 rounded-lg text-white font-semibold text-sm bg-linear-to-r from-primary-container to-secondary hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+      className='py-3 px-5 rounded-lg text-white font-semibold text-sm bg-primary-container/90 backdrop-blur-md border border-white/30 shadow-[var(--shadow-glass)] hover:shadow-[var(--shadow-glass-hover)] hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 flex items-center justify-center gap-2'
     >
       Add New Job
     </button>
