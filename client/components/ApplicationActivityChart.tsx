@@ -1,6 +1,7 @@
 'use client';
 import { useJobModal } from '@/app/contexts/JobModalContext';
 import { getActivityChartJobs } from '@/lib/api/jobs';
+import { format } from 'path';
 import { useState, useEffect } from 'react';
 import {
   BarChart,
@@ -9,19 +10,13 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  TooltipContentProps,
 } from 'recharts';
 
 export default function ApplicationActivityChart() {
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('weekly');
   const [data, setData] = useState([]);
   const { refreshCount } = useJobModal();
-
-  // useEffect(() => {
-  //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/chart?period=${period}`)
-  //     .then((res) => res.json())
-  //     .then((res) => setData(res.data.filled))
-  //     .catch((err) => console.log(err.message));
-  // }, [period, refreshCount]);
 
   useEffect(() => {
     async function fetchJobs() {
@@ -31,13 +26,36 @@ export default function ApplicationActivityChart() {
     fetchJobs();
   }, [period, refreshCount]);
 
-  useEffect(() => {
-    console.log(data);
-  });
+  function formatTick(value: string) {
+    const date =
+      period === 'monthly' ? new Date(`${value}-01`) : new Date(value);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      ...(period === 'weekly' && { day: 'numeric' }),
+      timeZone: 'UTC',
+    });
+  }
+
+  function CustomTooltip({ active, payload, label }: TooltipContentProps) {
+    const firstPayload = payload?.[0];
+    const isVisible = active && firstPayload != null;
+    if (!isVisible) return null;
+    const count = firstPayload.value;
+    return (
+      <div className='rounded-lg bg-white border border-[#dee2e6] shadow-[0_4px_12px_rgba(26,26,46,0.05)] px-3 py-2'>
+        <p className='text-xs font-semibold text-on-surface'>
+          {formatTick(String(label))}
+        </p>
+        <p className='text-sm text-primary font-medium mt-0.5'>
+          {count} application{count === 1 ? '' : 's'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
-      className='bg-white border border-[#dee2e6] rounded-xl p-5 flex-1'
+      className='bg-white border border-[#dee2e6] rounded-xl p-5'
       style={{ boxShadow: '0 4px 12px rgba(26,26,46,0.05)' }}
     >
       <div className='flex items-center justify-between mb-6'>
@@ -73,32 +91,36 @@ export default function ApplicationActivityChart() {
         </div>
       </div>
 
-      <ResponsiveContainer width='100%' height={280}>
-        <BarChart data={data} barSize={32}>
-          <XAxis
-            dataKey='_id'
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: '#444655' }}
-          />
-          <YAxis
-            dataKey='count'
-            allowDecimals={false}
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: '#444655' }}
-          />
-          <Tooltip
-            contentStyle={{
-              borderRadius: '8px',
-              border: '1px solid #dee2e6',
-              boxShadow: '0 4px 12px rgba(26,26,46,0.05)',
-            }}
-            cursor={{ fill: '#4361ee08' }}
-          />
-          <Bar dataKey='count' fill='#4361ee' radius={[4, 4, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className='focus:outline-none **:focus:outline-none'>
+        <ResponsiveContainer width='100%' height={280}>
+          <BarChart data={data} barSize={32}>
+            <XAxis
+              tickFormatter={formatTick}
+              dataKey='_id'
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#444655' }}
+            />
+            <YAxis
+              dataKey='count'
+              allowDecimals={false}
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: '#444655' }}
+            />
+            <Tooltip
+              contentStyle={{
+                borderRadius: '8px',
+                border: '1px solid #dee2e6',
+                boxShadow: '0 4px 12px rgba(26,26,46,0.05)',
+              }}
+              cursor={{ fill: '#4361ee08' }}
+              content={CustomTooltip}
+            />
+            <Bar dataKey='count' fill='#4361ee' radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

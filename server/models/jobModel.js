@@ -11,6 +11,7 @@ const jobSchema = new Schema({
   status: String,
   priority: String,
   notes: String,
+  jobDescription: String,
   matchResult: {
     matchScore: Number,
     matchedSkills: [String],

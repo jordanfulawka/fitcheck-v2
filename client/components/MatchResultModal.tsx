@@ -64,7 +64,7 @@ export default function MatchResultModal({
                 {result.matchedSkills.map((skill) => (
                   <span
                     key={skill}
-                    className='rounded-full px-3 py-1 text-xs font-semibold bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]'
+                    className='rounded-full px-3 py-1 text-xs font-semibold bg-primary-container/10 border border-[#4361ee] text-[#4361ee]'
                   >
                     {skill}
                   </span>

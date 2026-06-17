@@ -6,6 +6,7 @@ import { Job } from '@/types';
 import { Pencil, Sparkles, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import MatchResultModal from './MatchResultModal';
+import { useRouter } from 'next/navigation';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]',
@@ -25,6 +26,9 @@ export default function JobListItem({
 }) {
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(job.status);
+  const [showNoMatchPrompt, setShowNoMatchPrompt] = useState(false);
+
+  const router = useRouter();
 
   const formattedDate = job.dateApplied
     ? new Date(job.dateApplied).toLocaleDateString('en-US', {
@@ -49,6 +53,19 @@ export default function JobListItem({
     setCurrentStatus(job.status);
   }, [job.status]);
 
+  function handleSparkleClick() {
+    if (job.matchResult?.matchScore) {
+      setShowMatchModal(true);
+    } else {
+      setShowNoMatchPrompt(true);
+    }
+  }
+
+  function goToMatcher() {
+    localStorage.setItem('prefillJobDescription', job.jobDescription ?? '');
+    router.push('/ai-matcher');
+  }
+
   const { openEditModal } = useJobModal();
 
   return (
@@ -61,7 +78,7 @@ export default function JobListItem({
       <select
         value={currentStatus}
         onChange={(e) => handleStatusChange(e.target.value)}
-        className={`w-fit rounded-full px-3 py-1 text-xs font-semibold appearance-none cursor-pointer focus:outline-none ${statusStyles[currentStatus] ?? 'bg-[#dee2e6] text-[#1a1a2e]'}`}
+        className={`w-fit text-center rounded-full px-3 py-1 text-xs font-semibold appearance-none cursor-pointer focus:outline-none ${statusStyles[currentStatus] ?? 'bg-[#dee2e6] text-[#1a1a2e]'}`}
       >
         <option value='Applied'>Applied</option>
         <option value='Interviewing'>Interviewing</option>
@@ -74,6 +91,33 @@ export default function JobListItem({
           onClose={() => setShowMatchModal(false)}
         />
       )}
+      {showNoMatchPrompt && (
+        <div className='fixed inset-0 flex justify-center items-center bg-black/40 z-50'>
+          <div className='bg-white rounded-xl p-6 max-w-sm shadow-elevated'>
+            <p className='text-sm font-semibold text-on-surface'>
+              No AI match found for this job.
+            </p>
+            <p className='text-sm text-on-surface-variant mt-1'>
+              Go to the AI Matcher now?
+            </p>
+            <div className='flex gap-3 mt-5 justify-end'>
+              <button
+                onClick={() => setShowNoMatchPrompt(false)}
+                className='px-4 py-2 text-sm font-semibold rounded-lg text-on-surface-variant hover:bg-surface-container-low'
+              >
+                No, maybe later
+              </button>
+              <button
+                onClick={goToMatcher}
+                className='px-4 py-2 text-sm font-semibold rounded-lg text-white bg-primary-container hover:opacity-90'
+              >
+                Let&apos;s go!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className='flex justify-center'>
         <button
           onClick={() => handleDelete(job._id)}
@@ -88,7 +132,7 @@ export default function JobListItem({
           <Pencil size={16} />
         </button>
         <button
-          onClick={() => setShowMatchModal(true)}
+          onClick={handleSparkleClick}
           className='p-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors w-fit'
         >
           <Sparkles size={16} />

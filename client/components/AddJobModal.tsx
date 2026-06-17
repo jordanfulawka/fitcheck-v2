@@ -34,6 +34,7 @@ export default function AddJobModal({
   const [applicationURL, setApplicationURL] = useState('');
   const [status, setStatus] = useState('Applied');
   const [notes, setNotes] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
 
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +47,7 @@ export default function AddJobModal({
       setApplicationURL(job.applicationURL ?? '');
       setStatus(job.status);
       setNotes(job.notes ?? '');
+      setJobDescription(job.jobDescription ?? '');
     } else {
       setCompany('');
       setRole('');
@@ -54,6 +56,7 @@ export default function AddJobModal({
       setApplicationURL('');
       setStatus('Applied');
       setNotes('');
+      setJobDescription('');
     }
   }, [job]);
 
@@ -72,6 +75,7 @@ export default function AddJobModal({
       applicationURL,
       status,
       notes,
+      jobDescription,
     };
 
     setLoading(true);
@@ -183,6 +187,16 @@ export default function AddJobModal({
                 <option value='Rejected'>Rejected</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Job Description</label>
+            <textarea
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              rows={3}
+              className='w-full bg-white border-[1.5px] border-[#dee2e6] rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors resize-none'
+            />
           </div>
 
           <div>

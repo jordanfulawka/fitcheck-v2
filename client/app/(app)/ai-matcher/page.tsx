@@ -3,7 +3,7 @@
 import JobSelectionModal from '@/components/JobSelectionModal';
 import { getMatchScore } from '@/lib/api/match';
 import { Upload, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MatchResult } from '@/types';
 
 function ScoreRing({ score }: { score: number }) {
@@ -89,6 +89,15 @@ export default function AIMatcher() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const prefill = localStorage.getItem('prefillJobDescription');
+    if (prefill) {
+      setJobDescription(prefill);
+      localStorage.removeItem('prefillJobDescription');
+    }
+    console.log(prefill);
+  }, []);
 
   const canSubmit = !!resume && jobDescription.trim().length > 0 && !isLoading;
 

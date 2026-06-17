@@ -9,6 +9,7 @@ export interface Job {
   priority: string;
   notes: string;
   __v: string;
+  jobDescription?: string;
   matchResult?: MatchResult;
 }
 

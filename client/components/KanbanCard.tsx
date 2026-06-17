@@ -21,7 +21,7 @@ export default function KanbanCard({ job }: Props) {
   return (
     <div
       ref={ref}
-      className='rounded-lg bg-white/70 backdrop-blur-md border border-white/60 shadow-[var(--shadow-glass)] hover:shadow-[var(--shadow-glass-hover)] hover:-translate-y-0.5 p-4 cursor-grab active:cursor-grabbing transition-all duration-200'
+      className='rounded-lg bg-white/70 backdrop-blur-md border border-white/60 shadow-[--shadow-glass] hover:shadow-[--shadow-glass-hover] hover:-translate-y-0.5 p-4 cursor-grab active:cursor-grabbing transition-all duration-200'
       style={{ borderLeft: `3px solid ${colour}` }}
     >
       <div className='font-semibold text-sm text-on-surface'>{job.role}</div>

@@ -1,6 +1,5 @@
 'use client';
 
-import { useJobModal } from '@/app/contexts/JobModalContext';
 import {
   BadgeCheck,
   Brain,
@@ -19,7 +18,7 @@ export default function Sidebar() {
       <div>
         <div className='p-8 mb-6 border-b border-outline-variant/60'>
           <div className='flex items-center gap-2.5'>
-            <div className='flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-primary-container to-secondary shadow-[var(--shadow-glass)] shrink-0'>
+            <div className='flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-primary-container to-secondary shadow-[--shadow-glass] shrink-0'>
               <BadgeCheck className='w-5 h-5 text-white' />
             </div>
             <h1 className='text-2xl font-bold tracking-tight bg-linear-to-r from-primary-container to-secondary bg-clip-text text-transparent'>
