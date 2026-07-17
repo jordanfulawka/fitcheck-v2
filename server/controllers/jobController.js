@@ -285,3 +285,37 @@ exports.getRecentJobs = async (req, res) => {
     });
   }
 };
+
+exports.downloadResume = async (req, res) => {
+  const job = await Job.findOne({
+    _id: req.params.id,
+    userId: req.headers['x-user-email'],
+  });
+  if (!job?.resume?.data) {
+    return res.status(404).json({ status: 'fail', message: 'no resume found' });
+  }
+  res.set('Content-Type', job.resume.contentType);
+  res.set(
+    'Content-Disposition',
+    `attachment; filename="${job.resume.fileName}"`,
+  );
+  res.send(job.resume.data);
+};
+
+exports.downloadCoverLetter = async (req, res) => {
+  const job = await Job.findOne({
+    _id: req.params.id,
+    userId: req.headers['x-user-email'],
+  });
+  if (!job?.coverLetter?.data) {
+    return res
+      .status(404)
+      .json({ status: 'fail', message: 'no coverLetter found' });
+  }
+  res.set('Content-Type', job.resume.contentType);
+  res.set(
+    'Content-Disposition',
+    `attachment; filename="${job.coverLetter.fileName}"`,
+  );
+  res.send(job.coverLetter.data);
+};

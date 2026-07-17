@@ -42,4 +42,7 @@ router
   .patch(jobController.updateJob)
   .delete(jobController.deleteJob);
 
+router.route('/jobs/:id/resume').get(jobController.downloadResume);
+router.route('/jobs/:id/coverLetter').get(jobController.downloadCoverLetter);
+
 module.exports = router;

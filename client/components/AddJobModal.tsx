@@ -1,5 +1,6 @@
 'use client';
 
+import api from '@/lib/api/axios';
 import { createJob, updateJob } from '@/lib/api/jobs';
 import { Job } from '@/types';
 import { X } from 'lucide-react';
@@ -118,6 +119,18 @@ export default function AddJobModal({
     }
   }
 
+  async function handleDownload(jobId: string, type: 'resume' | 'coverLetter') {
+    const res = await api.get(`/jobs/${jobId}/${type}`, {
+      responseType: 'blob',
+    });
+    const url = window.URL.createObjectURL(res.data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
   return (
     <div
       className='fixed inset-0 bg-black/40 z-50 flex items-center justify-center'
@@ -224,21 +237,39 @@ export default function AddJobModal({
           <div className='flex justify-between'>
             <div className='w-[50%]'>
               <label className={labelClass}>Resume</label>
-              <input
-                type='file'
-                name='resume'
-                onChange={handleResumeChange}
-                ref={resumeRef}
-              />
+              {job?.resume ? (
+                <button
+                  type='button'
+                  onClick={() => handleDownload(job._id, 'resume')}
+                >
+                  Download Resume
+                </button>
+              ) : (
+                <input
+                  type='file'
+                  name='resume'
+                  onChange={handleResumeChange}
+                  ref={resumeRef}
+                />
+              )}
             </div>
             <div className='w-[50%]'>
               <label className={labelClass}>Cover Letter</label>
-              <input
-                type='file'
-                name='coverLetter'
-                onChange={handleCoverLetterChange}
-                ref={coverLetterRef}
-              />
+              {job?.resume ? (
+                <button
+                  type='button'
+                  onClick={() => handleDownload(job._id, 'coverLetter')}
+                >
+                  Download Cover Letter
+                </button>
+              ) : (
+                <input
+                  type='file'
+                  name='coverLetter'
+                  onChange={handleCoverLetterChange}
+                  ref={coverLetterRef}
+                />
+              )}
             </div>
           </div>
 
