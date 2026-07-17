@@ -21,7 +21,8 @@ export const getJobsPaginated = (
 export const updateJobStatus = (id: string, status: string) =>
   api.patch(`/jobs/${id}`, { status });
 
-export const createJob = (data: Partial<Job>) => api.post('/jobs', data);
+export const createJob = (data: Partial<Job> | FormData) =>
+  api.post('/jobs', data);
 
 export const deleteJob = (id: string) => api.delete(`/jobs/${id}`);
 
@@ -30,5 +31,5 @@ export const getDashboardJobs = () => api.get('/jobs/stats');
 export const getActivityChartJobs = (period: string) =>
   api.get(`/jobs/chart?period=${period}`);
 
-export const updateJob = (id: string, data: Partial<Job>) =>
+export const updateJob = (id: string, data: Partial<Job> | FormData) =>
   api.patch(`/jobs/${id}`, data);

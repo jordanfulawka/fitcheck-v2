@@ -10,8 +10,20 @@ const jobSchema = new Schema({
   applicationURL: String,
   status: String,
   priority: String,
-  notes: String,
   jobDescription: String,
+  resume: {
+    fileName: String,
+    contentType: String,
+    data: Buffer,
+    uploadedAt: Date,
+  },
+  coverLetter: {
+    fileName: String,
+    contentType: String,
+    data: Buffer,
+    uploadedAt: Date,
+  },
+
   matchResult: {
     matchScore: Number,
     matchedSkills: [String],

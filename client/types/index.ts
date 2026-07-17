@@ -7,10 +7,21 @@ export interface Job {
   applicationURL: string;
   status: string;
   priority: string;
-  notes: string;
   __v: string;
   jobDescription?: string;
   matchResult?: MatchResult;
+  resume: {
+    fileName: string;
+    contentType: string;
+    data: Buffer;
+    uploadedAt: Date;
+  };
+  coverLetter: {
+    fileName: string;
+    contentType: string;
+    data: Buffer;
+    uploadedAt: Date;
+  };
 }
 
 export interface MatchResult {

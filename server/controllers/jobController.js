@@ -83,10 +83,31 @@ exports.getJob = async (req, res) => {
 
 exports.createJob = async (req, res) => {
   try {
-    const newJob = await Job.create({
+    const jobData = {
       ...req.body,
       userId: req.headers['x-user-email'],
-    });
+    };
+
+    if (req.files?.resume?.[0]) {
+      jobData.resume = {
+        fileName: req.files.resume[0].originalname,
+        contentType: req.files.resume[0].mimetype,
+        data: req.files.resume[0].buffer,
+        uploadedAt: new Date(),
+      };
+    }
+
+    if (req.files?.coverLetter?.[0]) {
+      jobData.coverLetter = {
+        fileName: req.files.coverLetter[0].originalname,
+        contentType: req.files.coverLetter[0].mimetype,
+        data: req.files.coverLetter[0].buffer,
+        uploadedAt: new Date(),
+      };
+    }
+
+    const newJob = await Job.create(jobData);
+
     res.status(201).json({
       status: 'success',
       data: {
@@ -95,7 +116,7 @@ exports.createJob = async (req, res) => {
     });
   } catch (err) {
     res.status(404).json({
-      message: 'fail',
+      status: 'fail',
       message: 'failed to create job',
     });
   }

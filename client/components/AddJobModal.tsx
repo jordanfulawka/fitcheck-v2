@@ -4,7 +4,7 @@ import { createJob, updateJob } from '@/lib/api/jobs';
 import { Job } from '@/types';
 import { X } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   isOpen: boolean;
@@ -33,10 +33,14 @@ export default function AddJobModal({
   );
   const [applicationURL, setApplicationURL] = useState('');
   const [status, setStatus] = useState('Applied');
-  const [notes, setNotes] = useState('');
   const [jobDescription, setJobDescription] = useState('');
+  const [resume, setResume] = useState<File | null>(null);
+  const [coverLetter, setCoverLetter] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
+
+  const resumeRef = useRef<HTMLInputElement | null>(null);
+  const coverLetterRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (job) {
@@ -46,7 +50,6 @@ export default function AddJobModal({
       setDateApplied(job.dateApplied?.split('T')[0] ?? '');
       setApplicationURL(job.applicationURL ?? '');
       setStatus(job.status);
-      setNotes(job.notes ?? '');
       setJobDescription(job.jobDescription ?? '');
     } else {
       setCompany('');
@@ -55,7 +58,6 @@ export default function AddJobModal({
       setDateApplied(new Date().toISOString().split('T')[0]);
       setApplicationURL('');
       setStatus('Applied');
-      setNotes('');
       setJobDescription('');
     }
   }, [job]);
@@ -67,22 +69,23 @@ export default function AddJobModal({
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const newJob = {
-      company,
-      role,
-      location,
-      dateApplied,
-      applicationURL,
-      status,
-      notes,
-      jobDescription,
-    };
+    const formData = new FormData();
+
+    formData.append('company', company);
+    formData.append('role', role);
+    formData.append('location', location);
+    formData.append('dateApplied', dateApplied);
+    formData.append('applicationURL', applicationURL);
+    formData.append('status', status);
+    formData.append('jobDescription', jobDescription);
+    if (resume) formData.append('resume', resume);
+    if (coverLetter) formData.append('coverLetter', coverLetter);
 
     setLoading(true);
     if (job) {
-      await updateJob(job._id, newJob);
+      await updateJob(job._id, formData);
     } else {
-      await createJob(newJob);
+      await createJob(formData);
     }
     setLoading(false);
 
@@ -92,8 +95,27 @@ export default function AddJobModal({
     setDateApplied(new Date().toISOString().split('T')[0]);
     setApplicationURL('');
     setStatus('Applied');
-    setNotes('');
     onSuccess();
+    setResume(null);
+    setCoverLetter(null);
+    if (resumeRef.current) {
+      // CLEAR RESUME UPLOAD INPUT
+    }
+    if (coverLetterRef.current) {
+      // CLEAR COVER LETTER UPLOAD INPUT
+    }
+  }
+
+  function handleResumeChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      setResume(e.target.files[0]);
+    }
+  }
+
+  function handleCoverLetterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      setCoverLetter(e.target.files[0]);
+    }
   }
 
   return (
@@ -199,14 +221,25 @@ export default function AddJobModal({
             />
           </div>
 
-          <div>
-            <label className={labelClass}>Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              className='w-full bg-white border-[1.5px] border-[#dee2e6] rounded-lg px-3 py-2 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors resize-none'
-            />
+          <div className='flex justify-between'>
+            <div className='w-[50%]'>
+              <label className={labelClass}>Resume</label>
+              <input
+                type='file'
+                name='resume'
+                onChange={handleResumeChange}
+                ref={resumeRef}
+              />
+            </div>
+            <div className='w-[50%]'>
+              <label className={labelClass}>Cover Letter</label>
+              <input
+                type='file'
+                name='coverLetter'
+                onChange={handleCoverLetterChange}
+                ref={coverLetterRef}
+              />
+            </div>
           </div>
 
           <div className='flex justify-end gap-3 pt-2'>
