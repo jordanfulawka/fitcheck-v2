@@ -13,7 +13,12 @@ export default async function Dashboard() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs/stats`, {
     headers: { 'x-user-email': email ?? '' },
+    cache: 'no-store',
   });
+
+  if (!res.ok) {
+    throw new Error(`Failed to load stats: ${res.status}`);
+  }
 
   const { data } = await res.json();
 

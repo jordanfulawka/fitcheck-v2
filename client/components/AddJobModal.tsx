@@ -235,40 +235,68 @@ export default function AddJobModal({
           </div>
 
           <div className='flex justify-between'>
-            <div className='w-[50%]'>
+            <div className='w-[45%]'>
               <label className={labelClass}>Resume</label>
               {job?.resume ? (
                 <button
                   type='button'
                   onClick={() => handleDownload(job._id, 'resume')}
+                  className='text-sm font-semibold text-primary hover:underline'
                 >
                   Download Resume
                 </button>
               ) : (
-                <input
-                  type='file'
-                  name='resume'
-                  onChange={handleResumeChange}
-                  ref={resumeRef}
-                />
+                <label
+                  htmlFor='resume-upload'
+                  className='flex items-center justify-between h-10 w-full bg-white border-[1.5px] border-[#dee2e6] rounded-lg px-3 text-sm text-on-surface-variant cursor-pointer hover:border-primary transition-colors'
+                >
+                  <span className='truncate'>
+                    {resume ? resume.name : 'Choose file...'}
+                  </span>
+                  <span className='text-xs font-semibold text-primary shrink-0 ml-2'>
+                    Browse
+                  </span>
+                  <input
+                    id='resume-upload'
+                    type='file'
+                    name='resume'
+                    onChange={handleResumeChange}
+                    ref={resumeRef}
+                    className='hidden'
+                  />
+                </label>
               )}
             </div>
-            <div className='w-[50%]'>
+            <div className='w-[45%]'>
               <label className={labelClass}>Cover Letter</label>
-              {job?.resume ? (
+              {job?.coverLetter ? (
                 <button
                   type='button'
                   onClick={() => handleDownload(job._id, 'coverLetter')}
+                  className='text-sm font-semibold text-primary hover:underline'
                 >
                   Download Cover Letter
                 </button>
               ) : (
-                <input
-                  type='file'
-                  name='coverLetter'
-                  onChange={handleCoverLetterChange}
-                  ref={coverLetterRef}
-                />
+                <label
+                  htmlFor='coverletter-upload'
+                  className='flex items-center justify-between h-10 w-full bg-white border-[1.5px] border-[#dee2e6] rounded-lg px-3 text-sm text-on-surface-variant sursor-pointer hover:border-primary transition-colors'
+                >
+                  <span className='truncate'>
+                    {coverLetter ? coverLetter.name : 'Choose file...'}
+                  </span>
+                  <span className='text-xs font-semibold text-primary shrink-0 ml-2'>
+                    Browse
+                  </span>
+                  <input
+                    id='coverletter-upload'
+                    type='file'
+                    name='coverLetter'
+                    onChange={handleCoverLetterChange}
+                    ref={coverLetterRef}
+                    className='hidden'
+                  />
+                </label>
               )}
             </div>
           </div>
