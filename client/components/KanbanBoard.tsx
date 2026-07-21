@@ -33,6 +33,7 @@ export default function KanbanBoard() {
     }) => {
       await queryClient.cancelQueries({ queryKey: ['kanban'] });
       const previousKanbanJobs = queryClient.getQueryData(['kanban']);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       queryClient.setQueryData(['kanban', refreshCount], (old: any) => {
         if (!old) return old;
         return {
@@ -56,6 +57,7 @@ export default function KanbanBoard() {
       context,
     ) => {
       queryClient.setQueryData(['kanban'], context?.previousKanbanJobs);
+      console.log(jobId, newStatus);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['kanban'] });

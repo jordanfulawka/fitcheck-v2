@@ -4,9 +4,10 @@ import { useJobModal } from '@/app/contexts/JobModalContext';
 import { deleteJob, updateJobStatus } from '@/lib/api/jobs';
 import { Job } from '@/types';
 import { Pencil, Sparkles, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MatchResultModal from './MatchResultModal';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const statusStyles: Record<string, string> = {
   Applied: 'bg-[#4361ee]/10 border border-[#4361ee] text-[#4361ee]',
@@ -15,20 +16,34 @@ const statusStyles: Record<string, string> = {
   Rejected: 'bg-[#ba1a1a]/10 border border-[#ba1a1a] text-[#ba1a1a]',
 };
 
-export default function JobListItem({
-  job,
-  onDelete,
-  onUpdate,
-}: {
-  job: Job;
-  onDelete: () => void;
-  onUpdate: () => void;
-}) {
+export default function JobListItem({ job }: { job: Job }) {
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(job.status);
   const [showNoMatchPrompt, setShowNoMatchPrompt] = useState(false);
 
   const router = useRouter();
+
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteJob(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['list'] });
+    },
+  });
+
+  const statusMutation = useMutation({
+    mutationFn: (newStatus: string) => updateJobStatus(job._id, newStatus),
+    onMutate: (newStatus: string) => {
+      setCurrentStatus(newStatus);
+    },
+    onError: () => {
+      setCurrentStatus(job.status);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['list'] });
+    },
+  });
 
   const formattedDate = job.dateApplied
     ? new Date(job.dateApplied).toLocaleDateString('en-US', {
@@ -39,19 +54,12 @@ export default function JobListItem({
     : '-';
 
   async function handleDelete(id: string) {
-    await deleteJob(id);
-    onDelete();
+    deleteMutation.mutate(id);
   }
 
   async function handleStatusChange(newStatus: string) {
-    setCurrentStatus(newStatus);
-    await updateJobStatus(job._id, newStatus);
-    onUpdate();
+    statusMutation.mutate(newStatus);
   }
-
-  useEffect(() => {
-    setCurrentStatus(job.status);
-  }, [job.status]);
 
   function handleSparkleClick() {
     if (job.matchResult?.matchScore) {

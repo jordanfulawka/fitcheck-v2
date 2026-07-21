@@ -4,33 +4,26 @@ import { useJobModal } from '@/app/contexts/JobModalContext';
 import JobListItem from '@/components/JobListItem';
 import { getJobsPaginated } from '@/lib/api/jobs';
 import { Job } from '@/types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function JobList() {
-  const [jobs, setJobs] = useState<Job[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [status, setStatus] = useState('');
 
-  async function fetchJobs() {
-    const { data } = await getJobsPaginated(page, debouncedSearch, status);
-    setJobs(data.data.jobs);
-    setTotalPages(Math.max(1, data.data.totalPages));
-  }
-
   const { refreshCount } = useJobModal();
 
-  useEffect(() => {
-    fetchJobs();
-  }, [page, refreshCount]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setPage(1);
-    fetchJobs();
-  }, [debouncedSearch, status, refreshCount]);
+  const query = useQuery({
+    queryKey: ['list', refreshCount, page, debouncedSearch, status],
+    queryFn: () => getJobsPaginated(page, debouncedSearch, status),
+  });
+
+  const totalPages = Math.max(1, query.data?.data.data.totalPages);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -90,8 +83,8 @@ export default function JobList() {
         </div>
 
         <div className='min-h-75'>
-          {jobs.map((job) => (
-            <JobListItem key={job._id} job={job} onDelete={fetchJobs} onUpdate={fetchJobs} />
+          {query?.data?.data.data.jobs.map((job: Job) => (
+            <JobListItem key={job._id} job={job} />
           ))}
         </div>
 
