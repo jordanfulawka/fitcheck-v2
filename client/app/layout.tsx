@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import SessionProvider from '../components/SessionProvider';
 import { getServerSession } from 'next-auth';
+import ReactQueryClientProvider from './contexts/ReactQueryClientProvider';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -21,10 +22,12 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession();
   return (
-    <html lang='en' className={`${inter.variable} h-full antialiased`}>
-      <body className='min-h-full flex flex-col'>
-        <SessionProvider session={session}>{children}</SessionProvider>
-      </body>
-    </html>
+    <ReactQueryClientProvider>
+      <html lang='en' className={`${inter.variable} h-full antialiased`}>
+        <body className='min-h-full flex flex-col'>
+          <SessionProvider session={session}>{children}</SessionProvider>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }

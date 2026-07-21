@@ -1,6 +1,7 @@
 'use client';
 import { useJobModal } from '@/app/contexts/JobModalContext';
 import { getActivityChartJobs } from '@/lib/api/jobs';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'path';
 import { useState, useEffect } from 'react';
 import {
