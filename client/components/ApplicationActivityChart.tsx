@@ -16,16 +16,14 @@ import {
 
 export default function ApplicationActivityChart() {
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('weekly');
-  const [data, setData] = useState([]);
   const { refreshCount } = useJobModal();
 
-  useEffect(() => {
-    async function fetchJobs() {
-      const data = await getActivityChartJobs(period);
-      setData(data.data.data.filled);
-    }
-    fetchJobs();
-  }, [period, refreshCount]);
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ['chart', period, refreshCount],
+    queryFn: () => getActivityChartJobs(period),
+  });
 
   function formatTick(value: string) {
     const date =
@@ -94,7 +92,7 @@ export default function ApplicationActivityChart() {
 
       <div className='focus:outline-none **:focus:outline-none'>
         <ResponsiveContainer width='100%' height={280}>
-          <BarChart data={data} barSize={32}>
+          <BarChart data={query.data?.data.data.filled} barSize={32}>
             <XAxis
               tickFormatter={formatTick}
               dataKey='_id'
