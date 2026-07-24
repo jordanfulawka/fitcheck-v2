@@ -23,6 +23,7 @@ export default function ApplicationActivityChart() {
   const query = useQuery({
     queryKey: ['chart', period, refreshCount],
     queryFn: () => getActivityChartJobs(period),
+    refetchOnMount: false,
   });
 
   function formatTick(value: string) {
