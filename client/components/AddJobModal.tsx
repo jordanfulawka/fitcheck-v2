@@ -96,15 +96,10 @@ export default function AddJobModal({
     setDateApplied(new Date().toISOString().split('T')[0]);
     setApplicationURL('');
     setStatus('Applied');
+    setJobDescription('');
     onSuccess();
     setResume(null);
     setCoverLetter(null);
-    if (resumeRef.current) {
-      // CLEAR RESUME UPLOAD INPUT
-    }
-    if (coverLetterRef.current) {
-      // CLEAR COVER LETTER UPLOAD INPUT
-    }
   }
 
   function handleResumeChange(e: React.ChangeEvent<HTMLInputElement>) {
